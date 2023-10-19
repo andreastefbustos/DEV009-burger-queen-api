@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const config = require('./config');
 const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
@@ -7,6 +8,16 @@ const pkg = require('./package.json');
 
 const { port, secret } = config;
 const app = express();
+mongoose.connect(config.dbUrl);
+const database = mongoose.connection;
+
+database.on('error', (error) => {
+  console.error(error);
+});
+
+database.once('connected', () => {
+  console.info('Database Connected');
+});
 
 app.set('config', config);
 app.set('pkg', pkg);
