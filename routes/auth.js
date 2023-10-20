@@ -1,8 +1,3 @@
-const jwt = require('jsonwebtoken');
-const config = require('../config');
-
-const { secret } = config;
-
 const {
   login,
 } = require('../controller/auth');
