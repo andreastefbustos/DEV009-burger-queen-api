@@ -61,7 +61,7 @@ class OrderRepository {
   }
 
   async getById(id) {
-    const result = await this.model.findOne({ _id: id });
+    const result = await this.model.findById(id);
     return result;
   }
 
@@ -71,7 +71,7 @@ class OrderRepository {
   }
 
   async updateStatus(id, status) {
-    const result = await this.model.updateOne({ _id: id }, { status });
+    const result = await this.model.updateOne({ _id: id }, status);
     return result.modifiedCount > 0;
   }
 
