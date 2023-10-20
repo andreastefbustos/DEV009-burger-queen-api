@@ -18,10 +18,13 @@ module.exports = {
     return resp.json(order);
   },
   postOrders: async (req, resp) => {
+    const userId = req.user.id;
     const { client, table, products } = req.body;
 
     try {
-      await orderRepo.create({ client, table, products });
+      await orderRepo.create({
+        userId, client, table, products,
+      });
       return resp.sendStatus(201);
     } catch (err) {
       return resp.status(400).json({ error: err.message });
