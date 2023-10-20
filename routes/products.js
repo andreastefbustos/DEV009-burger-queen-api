@@ -3,6 +3,14 @@ const {
   requireRole,
 } = require('../middleware/auth');
 
+const {
+  getProducts,
+  getProductById,
+  postProducts,
+  putProducts,
+  deleteProducts,
+} = require('../controller/products');
+
 /** @module products */
 module.exports = (app, nextMain) => {
   /**
@@ -27,8 +35,7 @@ module.exports = (app, nextMain) => {
    * @code {200} si la autenticación es correcta
    * @code {401} si no hay cabecera de autenticación
    */
-  app.get('/products', requireAuth, (req, resp, next) => {
-  });
+  app.get('/products', requireAuth, getProducts);
 
   /**
    * @name GET /products/:productId
@@ -47,10 +54,7 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.get('/products/:productId', requireAuth, (req, resp, next) => {
-    // Obtener el id del producto
-    // db.find({id: })
-  });
+  app.get('/products/:productId', requireAuth, getProductById);
 
   /**
    * @name POST /products
@@ -74,14 +78,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.post('/products', requireRole('admin'), (req, resp, next) => {
-    // Sacar los valores de la requests
-    // Parsear esos valores a algo de tipo Product
-    // const product = {name: "", price: 10}
-    // db.insertOne(product)
-    // Validar que todo este bien y si no devolveis 400 o X
-    // si todo bien, devuelves 201 - 201 == CREATED
-  });
+  app.post('/products', requireRole('admin'), postProducts);
 
   /**
    * @name PUT /products
@@ -106,8 +103,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.put('/products/:productId', requireRole('admin'), (req, resp, next) => {
-  });
+  app.put('/products/:productId', requireRole('admin'), putProducts);
 
   /**
    * @name DELETE /products
@@ -127,8 +123,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es ni admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.delete('/products/:productId', requireRole('admin'), (req, resp, next) => {
-  });
+  app.delete('/products/:productId', requireRole('admin'), deleteProducts);
 
   nextMain();
 };
