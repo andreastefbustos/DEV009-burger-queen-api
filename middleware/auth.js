@@ -18,31 +18,39 @@ module.exports = (secret) => (req, resp, next) => {
       return next(403);
     }
 
-    // TODO: Verificar identidad del usuario usando `decodeToken.uid`
+    if (!decodedToken.id) {
+      return next(403);
+    }
+
+    req.user = decodedToken;
+    next();
   });
 };
 
-module.exports.isAuthenticated = (req) => (
-  // TODO: decidir por la informacion del request si la usuaria esta autenticada
-  false
-);
+module.exports.isAuthenticated = (req) => {
+  if (req.user) {
+    return true;
+  }
 
-module.exports.isAdmin = (req) => (
-  // TODO: decidir por la informacion del request si la usuaria es admin
-  false
-);
+  return false;
+};
+
+module.exports.isRole = (role, req) => (req.user.role === role);
 
 module.exports.requireAuth = (req, resp, next) => (
-  (!module.exports.isAuthenticated(req))
+  (!module.exports.isAuthenticated(req, resp))
     ? next(401)
     : next()
 );
 
-module.exports.requireAdmin = (req, resp, next) => (
-  // eslint-disable-next-line no-nested-ternary
-  (!module.exports.isAuthenticated(req))
-    ? next(401)
-    : (!module.exports.isAdmin(req))
-      ? next(403)
-      : next()
-);
+module.exports.requireRole = (role) => (req, resp, next) => {
+  if (!module.exports.isAuthenticated(req, resp)) {
+    return next(401);
+  }
+
+  if (!module.exports.isRole(role, req)) {
+    return next(403);
+  }
+
+  next();
+};

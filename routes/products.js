@@ -1,6 +1,6 @@
 const {
   requireAuth,
-  requireAdmin,
+  requireRole,
 } = require('../middleware/auth');
 
 /** @module products */
@@ -48,6 +48,8 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
   app.get('/products/:productId', requireAuth, (req, resp, next) => {
+    // Obtener el id del producto
+    // db.find({id: })
   });
 
   /**
@@ -72,7 +74,13 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.post('/products', requireAdmin, (req, resp, next) => {
+  app.post('/products', requireRole('admin'), (req, resp, next) => {
+    // Sacar los valores de la requests
+    // Parsear esos valores a algo de tipo Product
+    // const product = {name: "", price: 10}
+    // db.insertOne(product)
+    // Validar que todo este bien y si no devolveis 400 o X
+    // si todo bien, devuelves 201 - 201 == CREATED
   });
 
   /**
@@ -98,7 +106,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.put('/products/:productId', requireAdmin, (req, resp, next) => {
+  app.put('/products/:productId', requireRole('admin'), (req, resp, next) => {
   });
 
   /**
@@ -119,7 +127,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es ni admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
+  app.delete('/products/:productId', requireRole('admin'), (req, resp, next) => {
   });
 
   nextMain();
