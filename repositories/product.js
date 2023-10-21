@@ -18,9 +18,9 @@ const productSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    required: [true, 'Pproduct must have a type'],
+    required: [true, 'Product must have a type'],
     enum: {
-      values: ['Desayuno', 'Almuerzo y Cena', 'Bebida'],
+      values: ['desayuno', 'almuerzo_cena', 'bebida'],
       message: 'Type must be either Desayuno, Almuerzo y Cena or Bebida',
     },
   },

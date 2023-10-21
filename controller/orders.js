@@ -34,11 +34,10 @@ module.exports = {
     const { orderId } = req.params;
     const { status } = req.body;
 
-    const dateProcessed = new Date();
     const update = { status };
 
-    if (status === 'delivered') {
-      update.dateProcessed = dateProcessed;
+    if (status === 'ready') {
+      update.dateProcessed = new Date();
     }
 
     try {

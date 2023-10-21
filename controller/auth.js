@@ -24,6 +24,6 @@ module.exports = {
     }
 
     const token = jwt.sign({ id: user.id, role: user.role }, secret, { expiresIn: '3600s' });
-    return resp.json({ token });
+    return resp.json({ accessToken: token, user });
   },
 };
