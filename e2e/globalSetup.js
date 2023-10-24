@@ -2,6 +2,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 const kill = require('tree-kill');
 const { MongoClient } = require('mongodb');
+// const mongoose = require('mongoose');
 
 const mongoGlobalSetup = require("@shelf/jest-mongodb/lib/setup");
 
@@ -16,11 +17,13 @@ const __e2e = {
   adminUserCredentials: {
     email: config.adminEmail,
     password: config.adminPassword,
+    role: 'admin'
   },
   adminToken: null,
   testUserCredentials: {
-    email: 'test@test.test',
+    email: 'test@test.com',
     password: '123456',
+    role: 'waiter'
   },
   testUserToken: null,
   childProcessPid: null,
@@ -60,10 +63,11 @@ const createTestUser = () => fetchAsAdmin('/users', {
   body: __e2e.testUserCredentials,
 })
   .then((resp) => {
-    if (resp.status !== 200) {
+    if (resp.status !== 201) {
       throw new Error(`Error: Could not create test user - response ${resp.status}`);
     }
-    return fetch('/auth', { method: 'POST', body: __e2e.testUserCredentials });
+
+    return fetch('/login', { method: 'POST', body: __e2e.testUserCredentials });
   })
   .then((resp) => {
     if (resp.status !== 200) {
@@ -73,7 +77,7 @@ const createTestUser = () => fetchAsAdmin('/users', {
   })
   .then(({ token }) => Object.assign(__e2e, { testUserToken: token }));
 
-const checkAdminCredentials = () => fetch('/auth', {
+const checkAdminCredentials = () => fetch('/login', {
   method: 'POST',
   body: __e2e.adminUserCredentials,
 })
@@ -84,7 +88,7 @@ const checkAdminCredentials = () => fetch('/auth', {
 
     return resp.json();
   })
-  .then(({ token }) => Object.assign(__e2e, { adminToken: token }));
+  .then((json ) => Object.assign(__e2e, { adminToken: json.accessToken }));
 
 const waitForServerToBeReady = (retries = 10) => new Promise((resolve, reject) => {
   if (!retries) {
