@@ -23,10 +23,10 @@ module.exports = {
     } = req.body;
 
     try {
-      await productRepo.create({
+      const product = await productRepo.create({
         name, price, image, type,
       });
-      return resp.sendStatus(201);
+      return resp.status(201).json(product);
     } catch (err) {
       return resp.status(400).json({ error: err.message });
     }
@@ -56,8 +56,13 @@ module.exports = {
     }
 
     try {
-      await productRepo.update(productId, update);
-      return resp.sendStatus(200);
+      const product = await productRepo.update(productId, update);
+
+      if (!product) {
+        return resp.sendStatus(404);
+      }
+
+      return resp.status(200).json(product);
     } catch (err) {
       return resp.status(400).json({ error: err.message });
     }
@@ -66,9 +71,15 @@ module.exports = {
     const { productId } = req.params;
 
     try {
-      await productRepo.delete(productId);
-      return resp.sendStatus(200);
+      const product = await productRepo.delete(productId);
+
+      if (!product) {
+        return resp.sendStatus(404);
+      }
+
+      return resp.status(200).json(product);
     } catch (err) {
+      console.log("erorrrr", err)
       return resp.status(400).json({ error: err.message });
     }
   },

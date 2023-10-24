@@ -51,13 +51,13 @@ class ProductRepository {
   }
 
   async update(id, update) {
-    const result = await this.model.updateOne({ _id: id }, update);
-    return result.modifiedCount > 0;
+    const result = await this.model.findByIdAndUpdate({ _id: id }, update, {new: true});
+    return result;
   }
 
   async delete(id) {
-    const result = await this.model.deleteOne({ _id: id });
-    return result.deletedCount > 0;
+    const result = await this.model.findOneAndDelete({ _id: id });
+    return result;
   }
 }
 

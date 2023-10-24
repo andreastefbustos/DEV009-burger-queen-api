@@ -75,7 +75,9 @@ const createTestUser = () => fetchAsAdmin('/users', {
     }
     return resp.json();
   })
-  .then(({ token }) => Object.assign(__e2e, { testUserToken: token }));
+  .then((data) => {
+    Object.assign(__e2e, { testUserToken: data.accessToken });
+  });
 
 const checkAdminCredentials = () => fetch('/login', {
   method: 'POST',
