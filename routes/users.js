@@ -15,13 +15,14 @@ const {
 
 const userRepo = new UserRepository();
 
-const initAdminUser = (app, next) => {
+const initAdminUser = async (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
+
   if (!adminEmail || !adminPassword) {
     return next();
   }
 
-  const user = userRepo.getByEmail(adminEmail);
+  const user = await userRepo.getByEmail(adminEmail);
 
   if (!user) {
     const adminUser = {
@@ -30,7 +31,7 @@ const initAdminUser = (app, next) => {
       role: 'admin',
     };
 
-    userRepo.create(adminUser);
+    await userRepo.create(adminUser);
   }
 
   next();

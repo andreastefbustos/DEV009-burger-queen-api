@@ -10,7 +10,14 @@ module.exports = {
   },
   getUserById: async (req, resp) => {
     const { uid } = req.params;
-    const user = await userRepo.getById(uid);
+
+    let user;
+
+    if (uid.includes('@')) {
+      user = await userRepo.getByEmail(uid);
+    } else {
+      user = await userRepo.getById(uid);
+    }
 
     if (!user) {
       return resp.sendStatus(404);
@@ -22,8 +29,8 @@ module.exports = {
     const { email, password, role } = req.body;
 
     try {
-      await userRepo.create({ email, password: bcrypt.hashSync(password, 10), role });
-      return resp.sendStatus(201);
+      const user = await userRepo.create({ email, password: bcrypt.hashSync(password, 10), role });
+      return resp.status(201).json(user);
     } catch (err) {
       return resp.status(400).json({ error: err.message });
     }
@@ -31,6 +38,10 @@ module.exports = {
   putUsers: async (req, resp) => {
     const { uid } = req.params;
     const { email, password, role } = req.body;
+
+    if (!email && !password && !role) {
+      return resp.sendStatus(400);
+    }
 
     const update = {};
 
@@ -47,7 +58,17 @@ module.exports = {
     }
 
     try {
-      await userRepo.update(uid, update);
+      let user;
+      if (uid.includes('@')) {
+        user = await userRepo.updateByEmail(uid, update);
+      } else {
+        user = await userRepo.updateById(uid, update);
+      }
+
+      if (!user) {
+        return resp.sendStatus(404);
+      }
+
       return resp.sendStatus(200);
     } catch (err) {
       return resp.status(400).json({ error: err.message });
@@ -57,7 +78,18 @@ module.exports = {
     const { uid } = req.params;
 
     try {
-      await userRepo.delete(uid);
+      let deleteUser;
+
+      if (uid.includes('@')) {
+        deleteUser = await userRepo.deleteByEmail(uid);
+      } else {
+        deleteUser = await userRepo.deleteById(uid);
+      }
+
+      if (!deleteUser) {
+        return resp.sendStatus(404);
+      }
+
       return resp.sendStatus(200);
     } catch (err) {
       return resp.status(400).json({ error: err.message });

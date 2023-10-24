@@ -49,14 +49,24 @@ class UserRepository {
     return result;
   }
 
-  async update(id, update) {
-    const result = await this.model.updateOne({ _id: id }, update);
-    return result.modifiedCount > 0;
+  async updateById(id, update) {
+    const result = await this.model.findByIdAndUpdate({ _id: id }, update);
+    return result;
   }
 
-  async delete(id) {
-    const result = await this.model.deleteOne({ _id: id });
-    return result.deletedCount > 0;
+  async updateByEmail(email, update) {
+    const result = await this.model.findOneAndUpdate({ email: email }, update);
+    return result;
+  }
+
+  async deleteById(id) {
+    const result = await this.model.findOneAndDelete({ _id: id });
+    return result;
+  }
+
+  async deleteByEmail(email) {
+    const result = await this.model.findOneAndDelete({ email: email });
+    return result;
   }
 }
 
