@@ -24,7 +24,7 @@ describe('POST /products', () => {
     fetchAsAdmin('/products', {
       method: 'POST',
       body: {
-        name: 'Test',
+        name: 'Test 87665545',
         price: 5,
         image: 'imagen.png',
         type: 'desayuno',

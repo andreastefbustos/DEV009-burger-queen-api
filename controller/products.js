@@ -79,7 +79,6 @@ module.exports = {
 
       return resp.status(200).json(product);
     } catch (err) {
-      console.log("erorrrr", err)
       return resp.status(400).json({ error: err.message });
     }
   },

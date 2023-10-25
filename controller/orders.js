@@ -22,10 +22,10 @@ module.exports = {
     const { client, table, products } = req.body;
 
     try {
-      await orderRepo.create({
+      const order = await orderRepo.create({
         userId, client, table, products,
       });
-      return resp.sendStatus(201);
+      return resp.status(201).json(order);
     } catch (err) {
       return resp.status(400).json({ error: err.message });
     }
@@ -34,6 +34,10 @@ module.exports = {
     const { orderId } = req.params;
     const { status } = req.body;
 
+    if (!status) {
+      return resp.sendStatus(400);
+    }
+
     const update = { status };
 
     if (status === 'ready') {
@@ -41,8 +45,13 @@ module.exports = {
     }
 
     try {
-      await orderRepo.updateStatus(orderId, update);
-      return resp.sendStatus(200);
+      const order = await orderRepo.updateStatus(orderId, update);
+
+      if (!order) {
+        return resp.sendStatus(404);
+      }
+
+      return resp.status(200).json(order);
     } catch (err) {
       return resp.status(400).json({ error: err.message });
     }
@@ -51,8 +60,13 @@ module.exports = {
     const { orderId } = req.params;
 
     try {
-      await orderRepo.delete(orderId);
-      return resp.sendStatus(200);
+      const order = await orderRepo.delete(orderId);
+
+      if (!order) {
+        return resp.sendStatus(404);
+      }
+
+      return resp.status(200).json(order);
     } catch (err) {
       return resp.status(400).json({ error: err.message });
     }
