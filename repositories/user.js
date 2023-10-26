@@ -50,12 +50,12 @@ class UserRepository {
   }
 
   async updateById(id, update) {
-    const result = await this.model.findByIdAndUpdate({ _id: id }, update, {new: true});
+    const result = await this.model.findByIdAndUpdate({ _id: id }, update, {new: true, runValidators: true});
     return result;
   }
 
   async updateByEmail(email, update) {
-    const result = await this.model.findOneAndUpdate({ email: email }, update, {new: true});
+    const result = await this.model.findOneAndUpdate({ email: email }, update, {new: true, runValidators: true});
     return result;
   }
 

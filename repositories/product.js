@@ -51,7 +51,7 @@ class ProductRepository {
   }
 
   async update(id, update) {
-    const result = await this.model.findByIdAndUpdate({ _id: id }, update, {new: true});
+    const result = await this.model.findByIdAndUpdate({ _id: id }, update, {new: true, runValidators: true});
     return result;
   }
 
