@@ -150,5 +150,5 @@ Nuestra aplicación usa las siguientes variables de entorno:
 
 ### 6.3 Despliegue (Deployment)
 
-El despliegue se hizo en Vercel, para ingresar a la API ingresa [aquí](https://vercel.com/).
+El despliegue se hizo en Render, para ingresar a la API ingresa [aquí](https://queen-api-800w.onrender.com).
 
