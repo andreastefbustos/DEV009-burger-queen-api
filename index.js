@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -10,6 +11,7 @@ const pkg = require('./package.json');
 const { port, secret } = config;
 const app = express();
 mongoose.connect(config.dbUrl);
+
 const database = mongoose.connection;
 
 database.on('error', (error) => {
